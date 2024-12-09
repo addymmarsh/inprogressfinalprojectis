@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Sudoku</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .sudoku-container {
+      display: grid;
+      grid-template-columns: repeat(9, 40px);
+      gap: 2px;
+      justify-content: center;
+    }
+    .cell {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      font-size: 18px;
+      border: 1px solid #ccc;
+    }
+    .cell input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      text-align: center;
+      font-size: 18px;
+    }
+    .cell input:focus {
+      outline: 2px solid #007BFF;
+    }
+    .preset {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+    .button-container {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<br><a href ="scratch.html">Back to Scratch Page</a><br>
+<body>
+  <h1>Sudoku</h1>
+  <div class="sudoku-container" id="sudoku-board">
+    <!-- Sudoku board will be generated here -->
+  </div>
+  <div class="button-container">
+    <button onclick="checkSolution()">Check Solution</button>
+    <button onclick="resetBoard()">Reset</button>
+  </div>
+  <script>
+    const initialBoard = [
+      [5, 3, null, null, 7, null, null, null, null],
+      [6, null, null, 1, 9, 5, null, null, null],
+      [null, 9, 8, null, null, null, null, 6, null],
+      [8, null, null, null, 6, null, null, null, 3],
+      [4, null, null, 8, null, 3, null, null, 1],
+      [7, null, null, null, 2, null, null, null, 6],
+      [null, 6, null, null, null, null, 2, 8, null],
+      [null, null, null, 4, 1, 9, null, null, 5],
+      [null, null, null, null, 8, null, null, 7, 9],
+    ];
+
+    const sudokuBoard = document.getElementById("sudoku-board");
+
+    function generateBoard() {
+      sudokuBoard.innerHTML = "";
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+          const input = document.createElement("input");
+          input.type = "text";
+          input.maxLength = 1;
+
+          if (initialBoard[row][col] !== null) {
+            input.value = initialBoard[row][col];
+            input.disabled = true;
+            cell.classList.add("preset");
+          }
+
+          cell.appendChild(input);
+          sudokuBoard.appendChild(cell);
+        }
+      }
+    }
+
+    function checkSolution() {
+      const cells = sudokuBoard.querySelectorAll("input");
+      const userBoard = [];
+      for (let i = 0; i < 9; i++) userBoard.push([]);
+
+      cells.forEach((cell, index) => {
+        const row = Math.floor(index / 9);
+        const col = index % 9;
+        const value = parseInt(cell.value);
+        userBoard[row][col] = isNaN(value) ? null : value;
+      });
+
+      if (JSON.stringify(userBoard) === JSON.stringify(solution)) {
+        alert("Congratulations! You solved the puzzle!");
+      } else {
+        alert("There are errors in your solution. Keep trying!");
+      }
+    }
+
+    function resetBoard() {
+      generateBoard();
+    }
+
+    const solution = [
+      [5, 3, 4, 6, 7, 8, 9, 1, 2],
+      [6, 7, 2, 1, 9, 5, 3, 4, 8],
+      [1, 9, 8, 3, 4, 2, 5, 6, 7],
+      [8, 5, 9, 7, 6, 1, 4, 2, 3],
+      [4, 2, 6, 8, 5, 3, 7, 9, 1],
+      [7, 1, 3, 9, 2, 4, 8, 5, 6],
+      [9, 6, 1, 5, 3, 7, 2, 8, 4],
+      [2, 8, 7, 4, 1, 9, 6, 3, 5],
+      [3, 4, 5, 2, 8, 6, 1, 7, 9],
+    ];
+
+    generateBoard();
+  </script>
+</body>
+</html>
